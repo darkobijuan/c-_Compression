@@ -45,13 +45,19 @@ class Compression {
 
 int main(){
 
+	cout<<"\n";
+	cout<<"---------------------------------------------------------------------------------\n";
+	cout<<"-----------------------------      VECTORS       --------------------------------\n";
+	cout<<"---------------------------------------------------------------------------------\n";
+
+
 	//Create Vectors, vec1 is original, vec2 will be compressed original
 	vector <int> vec1 {2,2,5,5,5,5,5,3,3,3,8,8,8,8,8,8,8,8,1,4,4,4,4,6,6,6,6,6,6};
 	vector <Compression> vec2;
 
 
 	//Print original vector
-	cout<<"\nOriginal: \n";
+	cout<<"\nVector: \n";
 	for(int a : vec1){
 		cout<<" "<<a<<" ";
 	}
@@ -79,7 +85,7 @@ int main(){
 			}
 			//If we do not have a duplicate
 			else{	
-				//Set class variavles to save
+				//Set class variables to save
 				Compression temp;
 				temp.set_data(vec1.at(i));
 				temp.set_duplicate(1);
@@ -88,7 +94,6 @@ int main(){
 				continue;
 			}
 		}
-		
 	}
 
 
@@ -106,7 +111,92 @@ int main(){
 	for(it2 = vec2.begin(); it2 != vec2.end(); ++it2){
 		it2->Print_decompressed();		//Print class
 	}
+	cout<<"\n\n\n";
+
+
+	cout<<"---------------------------------------------------------------------------------\n";
+	cout<<"----------------------------   2D   VECTORS       -------------------------------\n";
+	cout<<"---------------------------------------------------------------------------------\n";
+
+
+	//Create 2D vector and vector to save it in
+	vector <vector <int>> Vec  {{2,2,5,5,5,5,5,3,3,3}, 
+		{8,8,8,8,8,8,8,8,1},
+		{4,4,4,4,6,6,6,6,6,6}};
+	vector <vector <Compression>> Vec2 {{}, {}, {}};
+
+
+	//Print 2D Vector
+	cout<<"\n2D Vector: \n";
+	for(size_t i = 0; i < Vec.size(); i++){
+		for (size_t j = 0; j < Vec.at(i).size(); j++){
+			cout<<" "<<Vec.at(i).at(j)<<" ";
+		}
+		cout<<endl;
+	}
 	cout<<"\n\n";
+
+
+	//This loop will take the 2D vector and compress and save it to our new vector
+	for (size_t i = 0; i < Vec.size(); i++){
+		for (size_t j = 0; j < Vec.at(i).size(); j++){
+			//First element
+			if (j == 0){
+				//Set class variables to save
+				Compression temp;
+				temp.set_data(Vec.at(i).at(j));
+				temp.set_duplicate(1);
+				temp.set_prev(Vec.at(i).at(j));
+				Vec2.at(i).push_back(temp);			//Save class variables into our vector
+				continue;
+			}
+			else {
+				//If our last vector is the same, we have a duplicate
+				if (Vec2.at(i).back().get_prev() == Vec.at(i).at(j)){
+					//get the last duplicate number
+					int temp = Vec2.at(i).back().get_duplicate();
+					//add one to the duplicate 
+					Vec2.at(i).back().set_duplicate(temp+1); 
+					continue;
+				}
+				//If we do not have a duplicate
+				else{	
+					//Set class variavles to save
+					Compression temp;
+					temp.set_data(Vec.at(i).at(j));
+					temp.set_duplicate(1);
+					temp.set_prev(Vec.at(i).at(j));
+					Vec2.at(i).push_back(temp);		//Save class variables into our vector
+					continue;
+				}
+			}	
+		}
+	}
+
+
+	//Print out new vector (compressed)
+	cout<<"Compressed: \n";
+	for (size_t i = 0; i < Vec2.size(); i++){
+		for (size_t j = 0; j < Vec2.at(i).size(); j++){
+			cout<<" "<<Vec2.at(i).at(j).get_data()<<" ";
+		}
+		cout<<endl;
+	}
+	cout<<"\n\n";
+
+
+	//Print out new vector (decompressed)
+	cout<<"Decompressed: \n";
+	for (size_t i = 0; i < Vec2.size(); i++){
+		for (size_t j = 0; j < Vec2.at(i).size(); j++){
+			for (int k = 0; k < Vec2.at(i).at(j).get_duplicate(); k++){
+				cout<<" "<<Vec2.at(i).at(j).get_data()<<" ";
+			}
+		}
+		cout<<endl;
+	}
+	cout<<"\n\n";
+
 
 
 	exit(EXIT_SUCCESS);
